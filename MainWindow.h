@@ -17,6 +17,7 @@ public:
 	MainWindow(); //Constructor
 	~MainWindow(); //Destructor
     void UpdateStatusBar();
+    int CountLivingNeighbors(int row, int col);
 
 private:
     std::vector<std::vector<bool>> gameBoard;
@@ -24,17 +25,17 @@ private:
 
     DrawingPanel* drawingPanel;
     wxStatusBar* statusBar;
-
-    int gridSize = 15;
+    wxToolBar* toolbar;
+    
     int generation = 0;
     int livingCells = 0;
 
-    DrawingPanel* drawingPanel;
-    wxStatusBar* statusBar;
-    wxToolBar* toolbar;
+    
+    
+    
 
     void initializeGrid();
-    void UpdateStatusBar();
+   
     void OnSizeChange(wxSizeEvent& event);
 
     void OnPlay(wxCommandEvent& event);

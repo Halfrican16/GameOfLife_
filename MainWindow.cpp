@@ -1,8 +1,6 @@
 #include "MainWindow.h"
 
-wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
-EVT_SIZE(MainWindow::OnSizeChange)
-wxEND_EVENT_TABLE()
+
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
 EVT_SIZE(MainWindow::OnSizeChange)
 EVT_MENU(10001, MainWindow::OnPlay)
@@ -87,4 +85,29 @@ void MainWindow::OnNext(wxCommandEvent& event) {
 
 void MainWindow::OnClear(wxCommandEvent& event) {
     wxLogMessage("Reset button clicked!");
+}
+
+int MainWindow::CountLivingNeighbors(int row, int col) {
+    int count = 0;
+
+    
+    int directions[8][2] = {
+        {-1, -1}, {-1, 0}, {-1, 1}, 
+        { 0, -1},         { 0, 1},  
+        { 1, -1}, { 1, 0}, { 1, 1} 
+    };
+
+    for (int i = 0; i < 8; i++) {
+        int newRow = row + directions[i][0];
+        int newCol = col + directions[i][1];
+
+        
+        if (newRow >= 0 && newRow < gridSize && newCol >= 0 && newCol < gridSize) {
+            if (gameBoard[newRow][newCol]) {
+                count++;
+            }
+        }
+    }
+
+    return count;
 }
