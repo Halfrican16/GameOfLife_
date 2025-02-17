@@ -140,6 +140,7 @@
     <ClInclude Include="..\Binaries\include\wx\wx.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="DrawingPanel.h" />
+    <ClInclude Include="Utilities.h" />
     <ClInclude Include="MainWindow.h" />
   </ItemGroup>
   <ItemGroup>

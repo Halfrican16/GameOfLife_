@@ -7,7 +7,7 @@ wxBEGIN_EVENT_TABLE(DrawingPanel, wxPanel)
 EVT_PAINT(DrawingPanel::OnPaint)
 wxEND_EVENT_TABLE()
 
-DrawingPanel::DrawingPanel(wxWindow* parent, std::vector<std::vector<bool>>& board)
+DrawingPanel::DrawingPanel(wxWindow* parent, std::vector<std::vector<Cell>>& board)
     : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize), gameBoard(board) {
     
 }
@@ -28,7 +28,7 @@ void DrawingPanel::OnMouseClick(wxMouseEvent& event) {
     int row = y / cellHeight;
 
     if (row >= 0 && row < gridSize && col >= 0 && col < gridSize) {
-        gameBoard[row][col] = !gameBoard[row][col];
+        gameBoard[row][col] = gameBoard[row][col];
     }
 
     wxFrame* parentFrame = dynamic_cast<wxFrame*>(GetParent());
@@ -56,7 +56,7 @@ void DrawingPanel::OnPaint(wxPaintEvent& event) {
             int y = row * cellHeight;
 
             
-            if (gameBoard[row][col]) {
+            if (gameBoard[row][col].alive) {
                 dc.SetBrush(*wxLIGHT_GREY_BRUSH);
             }
             else {

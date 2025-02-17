@@ -1,4 +1,4 @@
-#include "MainWindow.h"
+﻿#include "MainWindow.h"
 
 
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
@@ -69,19 +69,24 @@ void MainWindow::OnSizeChange(wxSizeEvent& event) {
 
 
 void MainWindow::initializeGrid() {
-
-    gameBoard.resize(gridSize, std::vector<bool>(gridSize, false));
+    gameBoard.resize(DEFAULT_GRID_SIZE, std::vector<Cell>(DEFAULT_GRID_SIZE)); // ✅ Correct type
 }
-
 
 void MainWindow::UpdateStatusBar() {
     livingCells = 0;
     for (const auto& row : gameBoard) {
-        for (bool cell : row) {
-            if (cell) livingCells++;
+        for (const auto& cell : row) {
+            if (cell.alive) {
+                livingCells++;
+            }
         }
     }
+
+    
+    wxString statusText = wxString::Format("Generation: %d | Living Cells: %d", generation, livingCells);
+    statusBar->SetStatusText(statusText);
 }
+
 
 void MainWindow::OnPlay(wxCommandEvent& event) {
     wxLogMessage("Play button clicked!");
@@ -102,20 +107,18 @@ void MainWindow::OnClear(wxCommandEvent& event) {
 int MainWindow::CountLivingNeighbors(int row, int col) {
     int count = 0;
 
-    
     int directions[8][2] = {
-        {-1, -1}, {-1, 0}, {-1, 1}, 
-        { 0, -1},         { 0, 1},  
-        { 1, -1}, { 1, 0}, { 1, 1} 
+        {-1, -1}, {-1, 0}, {-1, 1},
+        { 0, -1},         { 0, 1},
+        { 1, -1}, { 1, 0}, { 1, 1}
     };
 
     for (int i = 0; i < 8; i++) {
         int newRow = row + directions[i][0];
         int newCol = col + directions[i][1];
 
-        
         if (newRow >= 0 && newRow < gridSize && newCol >= 0 && newCol < gridSize) {
-            if (gameBoard[newRow][newCol]) {
+            if (gameBoard[newRow][newCol].alive) {
                 count++;
             }
         }
@@ -125,56 +128,47 @@ int MainWindow::CountLivingNeighbors(int row, int col) {
 }
 
 void MainWindow::GenerateNextGeneration() {
-
-    std::vector<std::vector<bool>> sandbox(gridSize, std::vector<bool>(gridSize, false));
-
+    std::vector<std::vector<Cell>> sandbox(gridSize, std::vector<Cell>(gridSize));
 
     int newLivingCells = 0;
-
 
     for (int row = 0; row < gridSize; row++) {
         for (int col = 0; col < gridSize; col++) {
             int neighbors = CountLivingNeighbors(row, col);
 
-
-            if (gameBoard[row][col]) {
+            
+            if (gameBoard[row][col].alive) { 
                 if (neighbors < 2 || neighbors > 3) {
-                    sandbox[row][col] = false;
+                    sandbox[row][col].alive = false;
                 }
                 else {
-                    sandbox[row][col] = true;
+                    sandbox[row][col].alive = true;
                     newLivingCells++;
                 }
             }
             else {
                 if (neighbors == 3) {
-                    sandbox[row][col] = true;
+                    sandbox[row][col].alive = true;
                     newLivingCells++;
                 }
             }
         }
     }
 
-
-
     gameBoard.swap(sandbox);
-
 
     generation++;
     livingCells = newLivingCells;
-
-
     UpdateStatusBar();
-
-
     drawingPanel->Refresh();
 }
+
 
     void MainWindow::OnClearBoard(wxCommandEvent& event) {
         
         for (int row = 0; row < gridSize; row++) {
             for (int col = 0; col < gridSize; col++) {
-                gameBoard[row][col] = false;
+                gameBoard[row][col].alive = false;
             }
         }
 
@@ -189,17 +183,5 @@ void MainWindow::GenerateNextGeneration() {
         drawingPanel->Refresh();
     }
 
-    void MainWindow::OnPlay(wxCommandEvent& event) {
-        if (!timer->IsRunning()) {
-            timer->Start(timerInterval); // Start the timer with the interval (50ms)
-            wxLogMessage("Simulation started.");
-        }
-    }
-
-    void MainWindow::OnPause(wxCommandEvent& event) {
-        if (timer->IsRunning()) {
-            timer->Stop(); // Stop the timer
-            wxLogMessage("Simulation paused.");
-        }
-    }
+    
 

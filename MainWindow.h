@@ -5,6 +5,7 @@
 #include<wx/timer.h>
 #include <vector>
 #include "DrawingPanel.h"
+#include "Utilities.h"
 
 #include "play.xpm"
 #include "pause.xpm"
@@ -23,7 +24,7 @@ public:
     void OnClearBoard(wxCommandEvent& event);
 
 private:
-    std::vector<std::vector<bool>> gameBoard;
+    std::vector<std::vector<Cell>> gameBoard;
     int gridSize = 15;
 
     DrawingPanel* drawingPanel;
@@ -33,7 +34,7 @@ private:
     
     int generation = 0;
     int livingCells = 0;
-    int timerInterval = 50;
+    int timerInterval = TIMER_INTERVAL;
     
 
     void initializeGrid();
