@@ -9,6 +9,7 @@ EVT_MENU(10003, MainWindow::OnNext)
 EVT_MENU(10004, MainWindow::OnClear)
 EVT_MENU(10005, MainWindow::OnNextGeneration)
 EVT_MENU(10006, MainWindow::OnClearBoard)
+EVT_TIMER(1007, MainWindow::OnTimer)
 wxEND_EVENT_TABLE()
 
 MainWindow::MainWindow()
@@ -19,6 +20,8 @@ MainWindow::MainWindow()
     drawingPanel = new DrawingPanel(this, gameBoard);
 
     drawingPanel->setGridSize(gridSize);
+
+    timer = new wxTimer(this, 10010);
 
     statusBar = CreateStatusBar();
     UpdateStatusBar();
@@ -36,11 +39,14 @@ MainWindow::MainWindow()
     toolbar->AddTool(10003, "Next", nextIcon, "Next Generation");
     toolbar->AddTool(10004, "Reset", trashIcon, "Clear Grid");
 
+    toolbar->Realize();
+
     
 
 
     wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
     sizer->Add(drawingPanel, 1, wxEXPAND);
+    sizer->Add(toolbar, 0, wxEXPAND);
     SetSizer(sizer);
 
     this->Layout();
@@ -48,6 +54,10 @@ MainWindow::MainWindow()
 
 MainWindow::~MainWindow() {
     
+}
+
+void MainWindow::OnTimer(wxTimerEvent& event) {
+    GenerateNextGeneration();
 }
 
 void MainWindow::OnSizeChange(wxSizeEvent& event) {
@@ -178,3 +188,18 @@ void MainWindow::GenerateNextGeneration() {
         
         drawingPanel->Refresh();
     }
+
+    void MainWindow::OnPlay(wxCommandEvent& event) {
+        if (!timer->IsRunning()) {
+            timer->Start(timerInterval); // Start the timer with the interval (50ms)
+            wxLogMessage("Simulation started.");
+        }
+    }
+
+    void MainWindow::OnPause(wxCommandEvent& event) {
+        if (timer->IsRunning()) {
+            timer->Stop(); // Stop the timer
+            wxLogMessage("Simulation paused.");
+        }
+    }
+

@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <wx/wx.h>
+#include<wx/timer.h>
 #include <vector>
 #include "DrawingPanel.h"
 
@@ -28,12 +29,11 @@ private:
     DrawingPanel* drawingPanel;
     wxStatusBar* statusBar;
     wxToolBar* toolbar;
+    wxTimer* timer;
     
     int generation = 0;
     int livingCells = 0;
-
-    
-    
+    int timerInterval = 50;
     
 
     void initializeGrid();
@@ -45,6 +45,7 @@ private:
     void OnPause(wxCommandEvent& event);
     void OnNext(wxCommandEvent& event);
     void OnClear(wxCommandEvent& event);
+    void OnTimer(wxTimerEvent& event);
 
     wxDECLARE_EVENT_TABLE();
 
