@@ -18,6 +18,7 @@ public:
 	~MainWindow(); //Destructor
     void UpdateStatusBar();
     int CountLivingNeighbors(int row, int col);
+    void GenerateNextGeneration();
 
 private:
     std::vector<std::vector<bool>> gameBoard;
@@ -37,6 +38,7 @@ private:
     void initializeGrid();
    
     void OnSizeChange(wxSizeEvent& event);
+    void OnNextGeneration(wxCommandEvent& event);
 
     void OnPlay(wxCommandEvent& event);
     void OnPause(wxCommandEvent& event);

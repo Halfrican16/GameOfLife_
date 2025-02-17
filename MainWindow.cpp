@@ -111,3 +111,49 @@ int MainWindow::CountLivingNeighbors(int row, int col) {
 
     return count;
 }
+
+void MainWindow::GenerateNextGeneration() {
+    
+    std::vector<std::vector<bool>> sandbox(gridSize, std::vector<bool>(gridSize, false));
+
+    
+    int newLivingCells = 0;
+
+    
+    for (int row = 0; row < gridSize; row++) {
+        for (int col = 0; col < gridSize; col++) {
+            int neighbors = CountLivingNeighbors(row, col);
+
+            
+            if (gameBoard[row][col]) { 
+                if (neighbors < 2 || neighbors > 3) {
+                    sandbox[row][col] = false;
+                }
+                else {
+                    sandbox[row][col] = true;
+                    newLivingCells++;
+                }
+            }
+            else {
+                if (neighbors == 3) {
+                    sandbox[row][col] = true;
+                    newLivingCells++;
+                }
+            }
+        }
+    }
+
+   
+    
+    gameBoard.swap(sandbox);
+
+    
+    generation++;
+    livingCells = newLivingCells;
+
+    
+    UpdateStatusBar();
+
+    
+    drawingPanel->Refresh();
+}
