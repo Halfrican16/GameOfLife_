@@ -7,6 +7,8 @@ EVT_MENU(10001, MainWindow::OnPlay)
 EVT_MENU(10002, MainWindow::OnPause)
 EVT_MENU(10003, MainWindow::OnNext)
 EVT_MENU(10004, MainWindow::OnClear)
+EVT_MENU(10005, MainWindow::OnNextGeneration)
+EVT_MENU(10006, MainWindow::OnClearBoard)
 wxEND_EVENT_TABLE()
 
 MainWindow::MainWindow()
@@ -113,19 +115,19 @@ int MainWindow::CountLivingNeighbors(int row, int col) {
 }
 
 void MainWindow::GenerateNextGeneration() {
-    
+
     std::vector<std::vector<bool>> sandbox(gridSize, std::vector<bool>(gridSize, false));
 
-    
+
     int newLivingCells = 0;
 
-    
+
     for (int row = 0; row < gridSize; row++) {
         for (int col = 0; col < gridSize; col++) {
             int neighbors = CountLivingNeighbors(row, col);
 
-            
-            if (gameBoard[row][col]) { 
+
+            if (gameBoard[row][col]) {
                 if (neighbors < 2 || neighbors > 3) {
                     sandbox[row][col] = false;
                 }
@@ -143,17 +145,36 @@ void MainWindow::GenerateNextGeneration() {
         }
     }
 
-   
-    
+
+
     gameBoard.swap(sandbox);
 
-    
+
     generation++;
     livingCells = newLivingCells;
 
-    
+
     UpdateStatusBar();
 
-    
+
     drawingPanel->Refresh();
 }
+
+    void MainWindow::OnClearBoard(wxCommandEvent& event) {
+        
+        for (int row = 0; row < gridSize; row++) {
+            for (int col = 0; col < gridSize; col++) {
+                gameBoard[row][col] = false;
+            }
+        }
+
+       
+        generation = 0;
+        livingCells = 0;
+
+        
+        UpdateStatusBar();
+
+        
+        drawingPanel->Refresh();
+    }

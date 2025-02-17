@@ -19,6 +19,7 @@ public:
     void UpdateStatusBar();
     int CountLivingNeighbors(int row, int col);
     void GenerateNextGeneration();
+    void OnClearBoard(wxCommandEvent& event);
 
 private:
     std::vector<std::vector<bool>> gameBoard;
