@@ -16,10 +16,3 @@ public:
 	virtual bool OnInit();
 };
 
-bool App::OnInit() {
-	ENABLE_LEAK_DETECTION();
-	MainWindow* mainWin = new MainWindow();
-	mainWin->Show();
-	return true;
-}
-

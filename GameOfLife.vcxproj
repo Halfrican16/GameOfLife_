@@ -134,12 +134,15 @@
     <ClCompile Include="App.cpp" />
     <ClCompile Include="DrawingPanel.cpp" />
     <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="SettingsDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Binaries\include\msvc\wx\setup.h" />
     <ClInclude Include="..\Binaries\include\wx\wx.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="DrawingPanel.h" />
+    <ClInclude Include="SettingsDialog.h" />
+    <ClInclude Include="Settings.h" />
     <ClInclude Include="Utilities.h" />
     <ClInclude Include="MainWindow.h" />
   </ItemGroup>

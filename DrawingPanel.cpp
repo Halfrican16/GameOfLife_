@@ -1,5 +1,6 @@
 #include "DrawingPanel.h"
 #include "MainWindow.h"
+#include "Utilities.h"
 
 
 
@@ -7,8 +8,8 @@ wxBEGIN_EVENT_TABLE(DrawingPanel, wxPanel)
 EVT_PAINT(DrawingPanel::OnPaint)
 wxEND_EVENT_TABLE()
 
-DrawingPanel::DrawingPanel(wxWindow* parent, std::vector<std::vector<Cell>>& board)
-    : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize), gameBoard(board) {
+DrawingPanel::DrawingPanel(wxWindow* parent, std::vector<std::vector<Cell>>& board, Settings* settingsPtr)
+    : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize), gameBoard(board), settings(settingsPtr) {
     
 }
 
@@ -57,15 +58,21 @@ void DrawingPanel::OnPaint(wxPaintEvent& event) {
 
             
             if (gameBoard[row][col].alive) {
-                dc.SetBrush(*wxLIGHT_GREY_BRUSH);
+                dc.SetBrush(wxBrush(settings->GetLivingColor()));
             }
             else {
-                dc.SetBrush(*wxWHITE_BRUSH);
+                dc.SetBrush(wxBrush(settings->GetDeadColor()));
             }
+            dc.SetBrush(wxBrush(gameBoard[row][col].alive ? settings->GetLivingColor() : settings->GetDeadColor()));
             dc.SetPen(*wxBLACK_PEN);
-
-            
             dc.DrawRectangle(x, y, cellWidth, cellHeight);
+
+            if (settings->showNeighborCount) {
+                int neighbors = gameBoard[row][col].alive ? 1 : 0;
+                dc.SetFont(wxFont(16, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
+                dc.SetTextForeground(*wxRED);
+                dc.DrawText(std::to_string(neighbors), x + cellWidth / 3, y + cellHeight / 4);
+            }
         }
     }
 }
